@@ -63,4 +63,5 @@ public class GameAssetManager {
     public String getBullet(){
         return bullet;
     }
+
 }

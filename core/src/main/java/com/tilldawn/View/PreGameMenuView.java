@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Control.PreGameMenuController;
@@ -13,18 +12,54 @@ import com.tilldawn.Main;
 public class PreGameMenuView implements Screen {
 
     private Stage stage;
+    private Table table;
+    private Skin skin;
+
     private final Label gameTitle;
+    private final Label heroTitle;
+    private final SelectBox<String> selectHero;
+    private final Label weaponTitle;
+    private final SelectBox<String> selectWeapon;
+    private final Label duration;
+    private final SelectBox<String> selectDuration;
     private final TextButton playButton;
-    private final SelectBox selectHero;
-    public Table table;
-    private PreGameMenuController controller;
+
+    private final PreGameMenuController controller;
 
     public PreGameMenuView(PreGameMenuController controller, Skin skin) {
-        this.gameTitle = new Label("Pregame Menu", skin);
-        this.selectHero = new SelectBox<>(skin);
-        this.playButton = new TextButton("Play", skin);
-        this.table = new Table();
         this.controller = controller;
+        this.skin = skin;
+
+        this.gameTitle = new Label("Pregame Menu", skin);
+        gameTitle.setFontScale(2f);
+        this.heroTitle = new Label("Hero:", skin);
+        this.weaponTitle = new Label("Weapon:", skin);
+        this.duration = new Label("Game Time:", skin);
+        selectHero = new SelectBox<>(skin);
+        selectHero.setItems(
+            "SHANA",
+            "DIAMOND",
+            "SCARLET",
+            "LILITH",
+            "DASHER"
+        );
+
+        selectWeapon = new SelectBox<>(skin);
+        selectWeapon.setItems(
+            "weapon1",
+            "weapon2",
+            "weapon3"
+        );
+
+        selectDuration = new SelectBox<>(skin);
+        selectDuration.setItems(
+            "2 min",
+            "5 min",
+            "10 min",
+            "20 min"
+        );
+        this.playButton = new TextButton("Play", skin);
+
         controller.setView(this);
     }
 
@@ -33,21 +68,24 @@ public class PreGameMenuView implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        Array<String> hero = new Array<>();
-
-        hero.add("hero1");
-        hero.add("hero2");
-        hero.add("hero3");
-
-        selectHero.setItems(hero);
-
+        table = new Table(skin);
         table.setFillParent(true);
         table.center();
-        table.row().pad(10, 0 , 10 , 0);
-        table.add(gameTitle);
-        table.row().pad(10, 0 , 10 , 0);
-        table.add(selectHero);
-        table.row().pad(10, 0 , 10 , 0);
+
+        table.add(gameTitle).pad(10);
+        table.row();
+        table.add(heroTitle).pad(10);
+        table.row();
+        table.add(selectHero).pad(10).width(300);
+        table.row();
+        table.add(weaponTitle).pad(10);
+        table.row();
+        table.add(selectWeapon).pad(10).width(300);
+        table.row();
+        table.add(duration).pad(10);
+        table.row();
+        table.add(selectDuration).pad(30).width(300);
+        table.row();
         table.add(playButton);
 
         stage.addActor(table);
@@ -86,6 +124,22 @@ public class PreGameMenuView implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public TextButton getPlayButton() {
+        return playButton;
+    }
+
+    public SelectBox<String> getSelectHero() {
+        return selectHero;
+    }
+
+    public SelectBox<String> getSelectWeapon() {
+        return selectWeapon;
+    }
+
+    public SelectBox<String> getSelectDuration() {
+        return selectDuration;
     }
 
 }

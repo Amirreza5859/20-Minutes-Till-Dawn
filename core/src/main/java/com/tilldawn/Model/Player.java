@@ -3,62 +3,40 @@ package com.tilldawn.Model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-
-import java.util.ArrayList;
+import com.tilldawn.Model.Enums.HeroType;
 
 public class Player {
-    private Texture playerTexture = new Texture(GameAssetManager.getGameAssetManager().getCharacter1_idle0());
-    private Sprite playerSprite = new Sprite(playerTexture);
-    private float posX = 0;
-    private float posY = 0;
-    private float playerHealth = 100;
-    private CollisionRect rect ;
-    private float time = 0;
-    private float speed = 5;
+    private final HeroType heroType;
+    private final Sprite playerSprite;
 
-    public float getSpeed() {
-        return speed;
-    }
-
+    private float posX;
+    private float posY;
+    private float playerHealth;
+    private float time = 0f;
     private boolean isPlayerIdle = true;
     private boolean isPlayerRunning = false;
+    private final CollisionRect rect;
 
-    public Player(){
-        playerSprite.setPosition((float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
-        playerSprite.setSize(playerTexture.getWidth() * 3, playerTexture.getHeight() * 3);
-        rect = new CollisionRect((float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight(), playerTexture.getWidth() * 3, playerTexture.getHeight() * 3);
-    }
+    public Player(HeroType heroType) {
+        this.heroType = heroType;
+        this.playerHealth = heroType.getHp();
 
-    public Texture getPlayerTexture() {
-        return playerTexture;
-    }
+        Texture idleTexture = heroType.getIdleTexture();
+        this.playerSprite = new Sprite(idleTexture);
+        this.posX = Gdx.graphics.getWidth() / 2f;
+        this.posY = Gdx.graphics.getHeight() / 2f;
 
-    public void setPlayerTexture(Texture playerTexture) {
-        this.playerTexture = playerTexture;
+        playerSprite.setPosition(posX, posY);
+        playerSprite.setSize(idleTexture.getWidth() * 3, idleTexture.getHeight() * 3);
+        rect = new CollisionRect(posX, posY, idleTexture.getWidth() * 3, idleTexture.getHeight() * 3);
     }
 
     public Sprite getPlayerSprite() {
         return playerSprite;
     }
 
-    public void setPlayerSprite(Sprite playerSprite) {
-        this.playerSprite = playerSprite;
-    }
-
-    public float getPosX() {
-        return posX;
-    }
-
-    public void setPosX(float posX) {
-        this.posX = posX;
-    }
-
-    public float getPosY() {
-        return posY;
-    }
-
-    public void setPosY(float posY) {
-        this.posY = posY;
+    public float getSpeed() {
+        return heroType.getSpeed();
     }
 
     public float getPlayerHealth() {
@@ -72,11 +50,6 @@ public class Player {
     public CollisionRect getRect() {
         return rect;
     }
-
-    public void setRect(CollisionRect rect) {
-        this.rect = rect;
-    }
-
 
     public boolean isPlayerIdle() {
         return isPlayerIdle;
@@ -98,8 +71,35 @@ public class Player {
         return time;
     }
 
+    public void updateTime(float delta) {
+        this.time += delta;
+    }
+
+    public Texture getCurrentFrame() {
+        return heroType.getIdleAnimation().getKeyFrame(time, true);
+    }
+
+    public HeroType getHeroType() {
+        return heroType;
+    }
+
+    public float getPosX() {
+        return posX;
+    }
+
+    public float getPosY() {
+        return posY;
+    }
+
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
     public void setTime(float time) {
         this.time = time;
     }
-
 }
